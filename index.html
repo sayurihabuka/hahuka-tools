@@ -472,6 +472,26 @@
 
 <script type="module">
 // ===================================================
+// FIREBASE
+// ===================================================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADUL3Zu7ZkguKuz7LUSarfAj7JFkteTMw",
+  authDomain: "hahuka-tools.firebaseapp.com",
+  databaseURL: "https://hahuka-tools-default-rtdb.firebaseio.com",
+  projectId: "hahuka-tools",
+  storageBucket: "hahuka-tools.firebasestorage.app",
+  messagingSenderId: "1097903942252",
+  appId: "1:1097903942252:web:f5713546094f3b4f55c649"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const checklistRef = ref(db, 'checklist');
+
+// ===================================================
 // DATA
 // ===================================================
 
@@ -691,7 +711,7 @@ const DAILY_STATE_KEYS = [];
 // ===================================================
 // STATE
 // ===================================================
-function getStorageKey(key) { return `study_v2_${key}`; }
+function getFirebaseKey(key) { return `study_v2_${key}`; }
 
 function getLastResetTs(resetCfg, now) {
   const d = new Date(now);
@@ -706,44 +726,40 @@ function getLastResetTs(resetCfg, now) {
 
 const catStates = {};
 
-function loadCatState(catId) {
-  try {
-    const raw = localStorage.getItem(getStorageKey(catId));
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return { checked: Array(CAT_ITEM_COUNT[catId]).fill(false), lastResetTs: 0 };
-}
-
 function saveCatState(key, st) {
-  try { localStorage.setItem(getStorageKey(key), JSON.stringify(st)); } catch(e) {}
+  set(ref(db, `checklist/${getFirebaseKey(key)}`), st)
+    .catch(e => console.error('Firebase save error:', e));
 }
 
-// 毎日系（曜日別独立）のstate読み込み・初期化
-function loadDailyState(key) {
-  try {
-    const raw = localStorage.getItem(getStorageKey(key));
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return { checked: [false], lastResetTs: 0 };
-}
-
-function initStates() {
+// Firebase から受け取ったデータにリセット処理を適用して catStates を更新
+function applyResets(firebaseData) {
   const now = Date.now();
+  const data = firebaseData || {};
+
   // カテゴリ系
   Object.keys(CAT_RESET).forEach(catId => {
-    let st = loadCatState(catId);
+    const fbKey = getFirebaseKey(catId);
+    let st = data[fbKey];
+    if (!st || !Array.isArray(st.checked)) {
+      st = { checked: Array(CAT_ITEM_COUNT[catId]).fill(false), lastResetTs: 0 };
+    }
     const expectedReset = getLastResetTs(CAT_RESET[catId], now);
-    if (expectedReset > st.lastResetTs) {
+    if (expectedReset > (st.lastResetTs || 0)) {
       st = { checked: Array(CAT_ITEM_COUNT[catId]).fill(false), lastResetTs: expectedReset };
       saveCatState(catId, st);
     }
     catStates[catId] = st;
   });
-  // 毎日系（曜日別独立）- 月曜00:00リセット
+
+  // 毎日系（曜日別独立）
   DAILY_STATE_KEYS.forEach(key => {
-    let st = loadDailyState(key);
+    const fbKey = getFirebaseKey(key);
+    let st = data[fbKey];
+    if (!st || !Array.isArray(st.checked)) {
+      st = { checked: [false], lastResetTs: 0 };
+    }
     const expectedReset = getLastResetTs(DAILY_RESET, now);
-    if (expectedReset > st.lastResetTs) {
+    if (expectedReset > (st.lastResetTs || 0)) {
       st = { checked: [false], lastResetTs: expectedReset };
       saveCatState(key, st);
     }
@@ -844,7 +860,7 @@ function buildDays() {
 // TOGGLE
 // ===================================================
 function toggleMainichi() {
-  document.getElementById('card-mainichi').classList.toggle('collapsed');
+  document.getElementById('card-mainichi')?.classList.toggle('collapsed');
 }
 
 function toggleDay(dayId) {
@@ -860,6 +876,11 @@ function toggleWeekItem(rowId, stateKey, itemIdx) {
   updateDayProgress();
   updateOverall();
 }
+
+// type="module" 内では onclick="..." からグローバル関数が呼べないため公開
+window.toggleWeekItem = toggleWeekItem;
+window.toggleDay = toggleDay;
+window.toggleMainichi = toggleMainichi;
 
 // ===================================================
 // PROGRESS
@@ -881,6 +902,7 @@ function updateDayProgress() {
 }
 
 
+function updateOverall() {
   // 今日の曜日のアイテム全部（毎朝・毎日含む）
   const todayIdx = new Date().getDay();
   const todayDay = DAYS.find(d => d.dayIndex === todayIdx);
@@ -897,33 +919,42 @@ function updateDayProgress() {
   document.getElementById('overallCount').textContent = `${done} / ${total}`;
 }
 
+function updateMainichiMini() {} // 毎朝カードはUI上削除済みのためno-op
+
 // ===================================================
-// AUTO RESET
+// AUTO RESET（1分ごとにリセット期限をチェック）
 // ===================================================
 function checkResets() {
   const now = Date.now();
+  let needsRebuild = false;
+
   // カテゴリ系
   Object.keys(CAT_RESET).forEach(catId => {
     const st = catStates[catId];
+    if (!st) return;
     const expected = getLastResetTs(CAT_RESET[catId], now);
-    if (expected > st.lastResetTs) {
+    if (expected > (st.lastResetTs || 0)) {
       catStates[catId] = { checked: Array(CAT_ITEM_COUNT[catId]).fill(false), lastResetTs: expected };
-      saveCatState(catId, catStates[catId]);
+      saveCatState(catId, catStates[catId]); // Firebase書き込み → onValue で全デバイスに反映
+      needsRebuild = true;
     }
   });
   // 毎日系
   DAILY_STATE_KEYS.forEach(key => {
     const st = catStates[key] || { checked: [false], lastResetTs: 0 };
     const expected = getLastResetTs(DAILY_RESET, now);
-    if (expected > st.lastResetTs) {
+    if (expected > (st.lastResetTs || 0)) {
       catStates[key] = { checked: [false], lastResetTs: expected };
       saveCatState(key, catStates[key]);
+      needsRebuild = true;
     }
   });
-  rebuildAllRows();
-  updateDayProgress();
-  updateMainichiMini();
-  updateOverall();
+
+  if (needsRebuild) {
+    rebuildAllRows();
+    updateDayProgress();
+    updateOverall();
+  }
 }
 
 function rebuildAllRows() {
@@ -964,13 +995,26 @@ function updateDate() {
 // ===================================================
 // INIT
 // ===================================================
-initStates();
-buildDays();
-updateDayProgress();
-updateOverall();
 updateDate();
 setInterval(checkResets, 60000);
 setInterval(updateDate, 60000);
+
+// Firebase からリアルタイム同期
+// onValue: データ取得 & 変更検知のたびに呼ばれる
+let uiBuilt = false;
+onValue(checklistRef, snapshot => {
+  applyResets(snapshot.val()); // リセット処理を適用して catStates を更新
+  if (!uiBuilt) {
+    buildDays();               // 初回のみDOMを構築
+    uiBuilt = true;
+  } else {
+    rebuildAllRows();          // 他デバイスからの変更をUIに反映
+  }
+  updateDayProgress();
+  updateOverall();
+}, error => {
+  console.error('Firebase onValue error:', error);
+});
 </script>
 </body>
 </html>
