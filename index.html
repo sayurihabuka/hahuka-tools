@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青の週間学習リスト（曜日別）</title>
+<title>週間学習リスト（曜日別）</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -293,7 +293,7 @@
   .item-row {
     display: flex;
     align-items: center;
-    padding: 11px 18px 11px 40px;
+    padding: 11px 18px;
     gap: 12px;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
@@ -349,76 +349,76 @@
   .item-row.checked .item-type-badge { opacity: 0.4; }
 
   /* Day color themes */
-  /* 月 ピンク */
-  .day-mon { background: #ffffff; }
-  .day-mon .day-header { border-left-color: #f857a6; background: #ffffff; }
-  .day-mon .day-badge { background: #ffe0f3; color: #f857a6; }
-  .day-mon .day-title-wrap h2 { color: #be185d; }
-  .day-mon .day-subtitle { color: #f857a6; }
-  .day-mon .day-progress-mini { background: #ffe0f3; color: #be185d; }
-  .day-mon .item-row.checked .custom-cb { background: #f857a6; }
-  .day-mon .custom-cb { border-color: #f9a8d4; }
+  /* 月 */
+  .day-mon { background: #fff8ff; }
+  .day-mon .day-header { border-left-color: #d946ef; background: #fff8ff; }
+  .day-mon .day-badge { background: #fae8ff; color: #d946ef; }
+  .day-mon .day-title-wrap h2 { color: #a21caf; }
+  .day-mon .day-subtitle { color: #d946ef; }
+  .day-mon .day-progress-mini { background: #fae8ff; color: #a21caf; }
+  .day-mon .item-row.checked .custom-cb { background: #d946ef; }
+  .day-mon .custom-cb { border-color: #f0abfc; }
 
-  /* 火 オレンジ */
-  .day-tue { background: #ffffff; }
-  .day-tue .day-header { border-left-color: #f97316; background: #ffffff; }
-  .day-tue .day-badge { background: #fff0e6; color: #f97316; }
+  /* 火 */
+  .day-tue { background: #fff5f0; }
+  .day-tue .day-header { border-left-color: var(--accent-orange); background: #fff5f0; }
+  .day-tue .day-badge { background: var(--accent-orange-light); color: var(--accent-orange); }
   .day-tue .day-title-wrap h2 { color: #c2410c; }
-  .day-tue .day-subtitle { color: #f97316; }
-  .day-tue .day-progress-mini { background: #fff0e6; color: #c2410c; }
-  .day-tue .item-row.checked .custom-cb { background: #f97316; }
+  .day-tue .day-subtitle { color: var(--accent-orange); }
+  .day-tue .day-progress-mini { background: var(--accent-orange-light); color: #c2410c; }
+  .day-tue .item-row.checked .custom-cb { background: var(--accent-orange); }
   .day-tue .custom-cb { border-color: #fdba74; }
 
-  /* 水 ブルー */
-  .day-wed { background: #ffffff; }
-  .day-wed .day-header { border-left-color: #3b6ef8; background: #ffffff; }
-  .day-wed .day-badge { background: #dce8ff; color: #3b6ef8; }
-  .day-wed .day-title-wrap h2 { color: #1d4ed8; }
-  .day-wed .day-subtitle { color: #3b6ef8; }
-  .day-wed .day-progress-mini { background: #dce8ff; color: #1d4ed8; }
-  .day-wed .item-row.checked .custom-cb { background: #3b6ef8; }
-  .day-wed .custom-cb { border-color: #93c5fd; }
+  /* 水 */
+  .day-wed { background: #f0faff; }
+  .day-wed .day-header { border-left-color: var(--accent-teal); background: #f0faff; }
+  .day-wed .day-badge { background: var(--accent-teal-light); color: var(--accent-teal); }
+  .day-wed .day-title-wrap h2 { color: #0369a1; }
+  .day-wed .day-subtitle { color: var(--accent-teal); }
+  .day-wed .day-progress-mini { background: var(--accent-teal-light); color: #0369a1; }
+  .day-wed .item-row.checked .custom-cb { background: var(--accent-teal); }
+  .day-wed .custom-cb { border-color: #7dd3fc; }
 
-  /* 木 グリーン */
-  .day-thu { background: #ffffff; }
-  .day-thu .day-header { border-left-color: #22c97c; background: #ffffff; }
-  .day-thu .day-badge { background: #d4f7e8; color: #22c97c; }
+  /* 木 */
+  .day-thu { background: #f0fff8; }
+  .day-thu .day-header { border-left-color: var(--accent-green); background: #f0fff8; }
+  .day-thu .day-badge { background: var(--accent-green-light); color: var(--accent-green); }
   .day-thu .day-title-wrap h2 { color: #15803d; }
-  .day-thu .day-subtitle { color: #22c97c; }
-  .day-thu .day-progress-mini { background: #d4f7e8; color: #15803d; }
-  .day-thu .item-row.checked .custom-cb { background: #22c97c; }
+  .day-thu .day-subtitle { color: var(--accent-green); }
+  .day-thu .day-progress-mini { background: var(--accent-green-light); color: #15803d; }
+  .day-thu .item-row.checked .custom-cb { background: var(--accent-green); }
   .day-thu .custom-cb { border-color: #6ee7b7; }
 
-  /* 金 黄色 */
-  .day-fri { background: #ffffff; }
-  .day-fri .day-header { border-left-color: #f59e0b; background: #ffffff; }
-  .day-fri .day-badge { background: #fef3c7; color: #f59e0b; }
+  /* 金 */
+  .day-fri { background: #fffbf0; }
+  .day-fri .day-header { border-left-color: var(--accent-amber); background: #fffbf0; }
+  .day-fri .day-badge { background: var(--accent-amber-light); color: var(--accent-amber); }
   .day-fri .day-title-wrap h2 { color: #b45309; }
-  .day-fri .day-subtitle { color: #f59e0b; }
-  .day-fri .day-progress-mini { background: #fef3c7; color: #b45309; }
-  .day-fri .item-row.checked .custom-cb { background: #f59e0b; }
+  .day-fri .day-subtitle { color: var(--accent-amber); }
+  .day-fri .day-progress-mini { background: var(--accent-amber-light); color: #b45309; }
+  .day-fri .item-row.checked .custom-cb { background: var(--accent-amber); }
   .day-fri .custom-cb { border-color: #fcd34d; }
 
-  /* 土 紫 */
-  .day-sat { background: #ffffff; }
-  .day-sat .day-header { border-left-color: #8b5cf6; background: #ffffff; }
-  .day-sat .day-badge { background: #ede9fe; color: #8b5cf6; }
+  /* 土 */
+  .day-sat { background: #f8f0ff; }
+  .day-sat .day-header { border-left-color: var(--accent-purple); background: #f8f0ff; }
+  .day-sat .day-badge { background: var(--accent-purple-light); color: var(--accent-purple); }
   .day-sat .day-title-wrap h2 { color: #6d28d9; }
-  .day-sat .day-subtitle { color: #8b5cf6; }
-  .day-sat .day-progress-mini { background: #ede9fe; color: #6d28d9; }
-  .day-sat .item-row.checked .custom-cb { background: #8b5cf6; }
+  .day-sat .day-subtitle { color: var(--accent-purple); }
+  .day-sat .day-progress-mini { background: var(--accent-purple-light); color: #6d28d9; }
+  .day-sat .item-row.checked .custom-cb { background: var(--accent-purple); }
   .day-sat .custom-cb { border-color: #c4b5fd; }
-  .day-sat .sub-section-label { color: #8b5cf6; }
+  .day-sat .sub-section-label { color: var(--accent-purple); }
 
-  /* 日 赤 */
-  .day-sun { background: #ffffff; }
-  .day-sun .day-header { border-left-color: #ef4444; background: #ffffff; }
-  .day-sun .day-badge { background: #fee2e2; color: #ef4444; }
-  .day-sun .day-title-wrap h2 { color: #b91c1c; }
-  .day-sun .day-subtitle { color: #ef4444; }
-  .day-sun .day-progress-mini { background: #fee2e2; color: #b91c1c; }
-  .day-sun .item-row.checked .custom-cb { background: #ef4444; }
-  .day-sun .custom-cb { border-color: #fca5a5; }
+  /* 日 */
+  .day-sun { background: #fff0f3; }
+  .day-sun .day-header { border-left-color: var(--accent-pink); background: #fff0f3; }
+  .day-sun .day-badge { background: var(--accent-pink-light); color: var(--accent-pink); }
+  .day-sun .day-title-wrap h2 { color: #be185d; }
+  .day-sun .day-subtitle { color: var(--accent-pink); }
+  .day-sun .day-progress-mini { background: var(--accent-pink-light); color: #be185d; }
+  .day-sun .item-row.checked .custom-cb { background: var(--accent-pink); }
+  .day-sun .custom-cb { border-color: #f9a8d4; }
 
   /* Today highlight */
   .day-section.today {
@@ -454,7 +454,7 @@
 <div class="wrapper">
   <header>
     <div class="header-badge">WEEKLY STUDY LIST</div>
-    <h1>📅 青の曜日別学習リスト</h1>
+    <h1>📅 曜日別学習リスト</h1>
     <div class="date-display" id="dateDisplay"></div>
   </header>
 
@@ -490,23 +490,23 @@ const DAILY_KEYS = ['piano', 'keisan', 'goi', 'kumon'];
 const DAILY_RESET = { day: 1, hour: 0 }; // 月曜00:00
 
 // 毎朝・毎日セクションを各曜日に挿入するヘルパー
-function makeMorning(dayId) {
-  return {
-    label: '☀️ 毎朝',
-    items: [
-      { label: '日々計算',      type: 'normal', stateKey: `daily_${dayId}_keisan`, itemIdx: 0 },
-      { label: '語彙力UP 1300', type: 'normal', stateKey: `daily_${dayId}_goi`,    itemIdx: 0 },
-    ]
-  };
-}
-function makeEvening(dayId) {
-  return {
-    label: '🌙 毎日',
-    items: [
-      { label: 'ピアノ', type: 'normal', stateKey: `daily_${dayId}_piano`, itemIdx: 0 },
-      { label: '公文',   type: 'normal', stateKey: `daily_${dayId}_kumon`, itemIdx: 0 },
-    ]
-  };
+function makeDailySection(dayId) {
+  return [
+    {
+      label: '☀️ 毎朝',
+      items: [
+        { label: '日々計算',      type: 'normal', stateKey: `daily_${dayId}_keisan`, itemIdx: 0 },
+        { label: '語彙力UP 1300', type: 'normal', stateKey: `daily_${dayId}_goi`,    itemIdx: 0 },
+      ]
+    },
+    {
+      label: '🌙 毎日',
+      items: [
+        { label: 'ピアノ', type: 'normal', stateKey: `daily_${dayId}_piano`,  itemIdx: 0 },
+        { label: '公文',   type: 'normal', stateKey: `daily_${dayId}_kumon`,  itemIdx: 0 },
+      ]
+    },
+  ];
 }
 
 // 曜日別データ
@@ -519,7 +519,6 @@ const DAYS = [
     title: '月曜日',
     subtitle: '',
     sections: [
-      makeMorning('mon'),
       {
         label: '📚 学習',
         items: [
@@ -529,7 +528,7 @@ const DAYS = [
           { label: '英語 書き取り宿題',                    type: 'normal', stateKey: 'eigo',   itemIdx: 1 },
         ]
       },
-      makeEvening('mon'),
+      ...makeDailySection('mon'),
     ]
   },
   {
@@ -540,7 +539,6 @@ const DAYS = [
     title: '火曜日',
     subtitle: '公文',
     sections: [
-      makeMorning('tue'),
       {
         label: '📚 学習',
         items: [
@@ -548,7 +546,7 @@ const DAYS = [
           { label: '英語 レッスン予習',   type: 'normal', stateKey: 'eigo',  itemIdx: 2 },
         ]
       },
-      makeEvening('tue'),
+      ...makeDailySection('tue'),
     ]
   },
   {
@@ -559,7 +557,6 @@ const DAYS = [
     title: '水曜日',
     subtitle: '希ベーシック',
     sections: [
-      makeMorning('wed'),
       {
         label: '📚 学習',
         items: [
@@ -569,7 +566,7 @@ const DAYS = [
           { label: '英語 予習',                 type: 'normal', stateKey: 'eigo',  itemIdx: 2 },
         ]
       },
-      makeEvening('wed'),
+      ...makeDailySection('wed'),
     ]
   },
   {
@@ -580,7 +577,6 @@ const DAYS = [
     title: '木曜日',
     subtitle: '英語',
     sections: [
-      makeMorning('thu'),
       {
         label: '📚 学習',
         items: [
@@ -589,7 +585,7 @@ const DAYS = [
           { label: 'ベーシック国語 漢字・四字熟語/ことわざ/慣用句', type: 'normal', stateKey: 'kokugo', itemIdx: 2 },
         ]
       },
-      makeEvening('thu'),
+      ...makeDailySection('thu'),
     ]
   },
   {
@@ -600,7 +596,6 @@ const DAYS = [
     title: '金曜日',
     subtitle: 'ピアノ・公文',
     sections: [
-      makeMorning('fri'),
       {
         label: '📚 学習',
         items: [
@@ -608,7 +603,7 @@ const DAYS = [
           { label: 'ベーシック国語 書き写し',   type: 'normal', stateKey: 'kokugo', itemIdx: 3 },
         ]
       },
-      makeEvening('fri'),
+      ...makeDailySection('fri'),
     ]
   },
   {
@@ -619,7 +614,6 @@ const DAYS = [
     title: '土曜日',
     subtitle: '希最レ',
     sections: [
-      makeMorning('sat'),
       {
         label: '☀️ 午前',
         items: [
@@ -637,7 +631,20 @@ const DAYS = [
           { label: '漢字・四字熟語/ことわざ/慣用句 解き直し', type: 'red',    stateKey: 'kokugo', itemIdx: 6 },
         ]
       },
-      makeEvening('sat'),
+      {
+        label: '☀️ 毎朝',
+        items: [
+          { label: '日々計算',      type: 'normal', stateKey: 'daily_sat_keisan', itemIdx: 0 },
+          { label: '語彙力UP 1300', type: 'normal', stateKey: 'daily_sat_goi',    itemIdx: 0 },
+        ]
+      },
+      {
+        label: '🌙 毎日',
+        items: [
+          { label: 'ピアノ', type: 'normal', stateKey: 'daily_sat_piano', itemIdx: 0 },
+          { label: '公文',   type: 'normal', stateKey: 'daily_sat_kumon', itemIdx: 0 },
+        ]
+      },
     ]
   },
   {
@@ -648,14 +655,13 @@ const DAYS = [
     title: '日曜日',
     subtitle: '',
     sections: [
-      makeMorning('sun'),
       {
         label: '📚 学習',
         items: [
           { label: '最レ算数 応用C', type: 'normal', stateKey: 'saile', itemIdx: 2 },
         ]
       },
-      makeEvening('sun'),
+      ...makeDailySection('sun'),
     ]
   },
 ];
@@ -874,7 +880,8 @@ function updateDayProgress() {
   });
 }
 
-function updateOverall() {
+
+  // 今日の曜日のアイテム全部（毎朝・毎日含む）
   const todayIdx = new Date().getDay();
   const todayDay = DAYS.find(d => d.dayIndex === todayIdx);
   let total = 0, done = 0;
@@ -915,6 +922,7 @@ function checkResets() {
   });
   rebuildAllRows();
   updateDayProgress();
+  updateMainichiMini();
   updateOverall();
 }
 
